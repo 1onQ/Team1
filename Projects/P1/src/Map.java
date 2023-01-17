@@ -55,18 +55,29 @@ public class Map {
   public boolean move(String name, Location loc, Type type) {
     // update locations, components, and field
     // use the setLocation method for the component to move it to the new location
-	  if (loc.x >= 24 || loc.x < 0 || loc.y >= 25 || loc.y < 0) {
+	  if (loc.x >= 24 || loc.x < 0 || loc.y >= 25 || loc.y < 0 || 
+                    type == Type.WALL || type == Type.EMPTY) {
 		  return false;
 	  }
 	  
-	  locations.remove(name);
-	  locations.put(name, loc);
-	  field.get(loc).add(type);
-		  
-	  JComponent comp = components.get(name);
-	  comp.setLocation(loc.x, loc.y);
-	
-	  return true;
+    // Ensure not moving into a Map.Type.WALL
+    if (field.get(loc).contains(Type.WALL)) {
+      return false;
+    }
+
+    // Check if name and locations are valid
+    if (locations.containsKey(name) && components.containsKey(name) && field.containsKey(loc)) {
+      locations.remove(name);
+      locations.put(name, loc);
+      field.get(loc).add(type);
+        
+      JComponent comp = components.get(name);
+      comp.setLocation(loc.x, loc.y);
+    
+      return true; 
+    } else {
+      return false;
+    }
   }
 
   public HashSet<Type> getLoc(Location loc) {
