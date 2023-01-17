@@ -18,7 +18,7 @@ public class PacMan {
 
   public ArrayList<Location> get_valid_moves() {
     int x = this.myLoc.x;
-    int y = x;
+    int y = this.myLoc.y;
 
     ArrayList<Location> newLocations = new ArrayList<Location>();
     ArrayList<Location> result = new ArrayList<Location>();
@@ -46,8 +46,12 @@ public class PacMan {
 
   public boolean move() {
     ArrayList<Location> possibleMoves = get_valid_moves();
-    Random rand = new Random();
-    this.myLoc = possibleMoves.get(rand.nextInt());
+    if (possibleMoves.size() > 0) {
+    	// Using random object to get index within ArrayList
+    	Random rand = new Random();
+    	this.myLoc = possibleMoves.get(rand.nextInt(possibleMoves.size()));
+    	return true;
+    }
     return false;
   }
 
@@ -56,9 +60,7 @@ public class PacMan {
    * current position.
    */
   public boolean is_ghost_in_range() {
-    if(1==1){
-      return false;
-    }
+
     // get current location
     int x = this.myLoc.x;
     int y = this.myLoc.y;
@@ -84,11 +86,8 @@ public class PacMan {
 
           // return true
           return true;
-
         }
-
       }
-
     }
 
     // if no ghosts are found, return false
@@ -98,7 +97,7 @@ public class PacMan {
   public JComponent consume() {
     if (myMap.getLoc(myLoc).contains(Map.Type.COOKIE)) {
       String cookieName = "tok_x" + myLoc.x + "_y" + myLoc.y;
-      return myMap.eatCookie("Brownie Name");
+      return myMap.eatCookie(cookieName);
     }
     return null;
   }

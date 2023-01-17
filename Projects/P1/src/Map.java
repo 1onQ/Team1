@@ -55,18 +55,29 @@ public class Map {
   public boolean move(String name, Location loc, Type type) {
     // update locations, components, and field
     // use the setLocation method for the component to move it to the new location
-	  if (loc.x >= 24 || loc.x < 0 || loc.y >= 25 || loc.y < 0) {
+	  if (loc.x >= 24 || loc.x < 0 || loc.y >= 25 || loc.y < 0 || 
+                    type == Type.WALL || type == Type.EMPTY) {
 		  return false;
 	  }
 	  
-	  locations.remove(name);
-	  locations.put(name, loc);
-	  field.get(loc).add(type);
-		  
-	  JComponent comp = components.get(name);
-	  comp.setLocation(loc.x, loc.y);
-	
-	  return true;
+    // Ensure not moving into a Map.Type.WALL
+    if (field.get(loc).contains(Type.WALL)) {
+      return false;
+    }
+
+    // Check if name and locations are valid
+    if (locations.containsKey(name) && components.containsKey(name) && field.containsKey(loc)) {
+      locations.remove(name);
+      locations.put(name, loc);
+      field.get(loc).add(type);
+        
+      JComponent comp = components.get(name);
+      comp.setLocation(loc.x, loc.y);
+    
+      return true; 
+    } else {
+      return false;
+    }
   }
 
   public HashSet<Type> getLoc(Location loc) {
@@ -94,8 +105,8 @@ public class Map {
         return this.wallSet;
       }
     }
-    HashSet<Type> set2 = new HashSet<Type>();
-    return set2;
+    //HashSet<Type> set2 = new HashSet<Type>();
+    return set;
   }
 
   /**
@@ -106,16 +117,17 @@ public class Map {
    * @param Name the name of the ghost
    */
   public boolean attack(String Name) {
-    if(1==1){
-      return false;
-    }
+
     if (locations.get(Name).equals(locations.get("pacman"))) {
       // update locations, components, and field
       // use the setLocation method for the component to move it to the new location
+      move(Name, locations.get(Name), Map.Type.GHOST);
       return true;
     }
+
     return false;
   }
+  
   /*Code used to test attack for attack method in Ghost.java - Justin Pratama
    *  public boolean attack(String Name) {
     gameOver = true;
@@ -186,7 +198,7 @@ public class Map {
 
     
         // Returns cookie to be deleted
-        return null;
+        return deleteCookie;
       }
     
     return null;
