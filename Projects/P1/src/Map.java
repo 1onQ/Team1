@@ -106,16 +106,17 @@ public class Map {
    * @param Name the name of the ghost
    */
   public boolean attack(String Name) {
-    if(1==1){
-      return false;
-    }
+
     if (locations.get(Name).equals(locations.get("pacman"))) {
       // update locations, components, and field
       // use the setLocation method for the component to move it to the new location
+      move(Name, locations.get(Name), Map.Type.GHOST);
       return true;
     }
+
     return false;
   }
+  
   /*Code used to test attack for attack method in Ghost.java - Justin Pratama
    *  public boolean attack(String Name) {
     gameOver = true;
